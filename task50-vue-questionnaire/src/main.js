@@ -9,6 +9,9 @@ import Newqn from './components/newqn';
 
 Vue.use(VueRouter);
 
+const bus = new Vue();
+export default bus;
+
 const router = new VueRouter({
   moder: 'history',
   base: __dirname,

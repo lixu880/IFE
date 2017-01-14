@@ -18,14 +18,7 @@
 <script>
   export default {
     name: 'app',
-    data() {
-      return {
-        qns: [],
-      };
-    },
-  }
-
-  ;
+  };
 
 </script>
 <style lang="scss">
@@ -62,6 +55,7 @@
   body {
     width: 100%;
     height: 100%;
+    background: #efefef;
   }
   
   @font-face {
@@ -74,7 +68,7 @@
     url('./fonts/icons/iconfont.svg?t=1484105018974#iconfont') format('svg');
     /* iOS 4.1- */
   }
-    
+  
   .iconfont {
     font-family: "iconfont" !important;
     font-size: 16px;
@@ -90,7 +84,6 @@
     width: 100%;
     height: 100%;
     color: #2c3e50;
-    background: #efefef;
     position: relative;
     >header {
       background: #23b1e8;
