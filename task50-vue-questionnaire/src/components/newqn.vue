@@ -34,8 +34,6 @@
   </div>
 </template>
 <script>
-  import bus from '../main';
-  
   export default {
     name: 'newQn',
     data() {
@@ -103,7 +101,7 @@
         qn.options.push(`选项${qn.options.length + 1}`);
       },
       saveQns() {
-        bus.$emit('save', this.aQns);
+        this.$store.commit('saveQns', this.aQns);
       },
     },
   };
@@ -111,15 +109,14 @@
 </script>
 <style lang="scss" scoped>
   .new-qn {
-    width: 70%;
-    position: absolute;
-    top: 20%;
-    left: 15%;
-    margin-bottom: 10%;
+    width: 60%;
+    margin: 10% auto;
+    overflow: hidden;
     background: #fff;
     box-shadow: 0 5px 15px #999;
     border-radius: 5px;
     padding: 25px;
+    position: relative;
     .title {
       width: 100%;
       height: 40px;
@@ -139,6 +136,7 @@
       background: #eee;
       border: 1px solid #ccc;
       cursor: pointer;
+      background: rgba(250, 255, 158, 0.59);
       &:before {
         content: '';
         display: inline-block;
@@ -169,7 +167,7 @@
         box-shadow: 0 3px 6px #999;
         &:hover {
           color: #fff;
-          background: #23b1e8;
+          background: #42B983;
         }
       }
     }

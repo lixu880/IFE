@@ -6,19 +6,24 @@
 <script>
   export default {
     name: 'blank',
+    // 如果有数据跳列表页
+    created() {
+      if (this.$store.state.qnss.length !== 0) {
+        this.$router.push({ path: '/list' });
+      }
+    },
   };
 
 </script>
 <style lang="scss" scoped>
   .blank {
-    width: 70%;
+    width: 60%;
     height: 30%;
-    position: absolute;
-    top: 20%;
-    left: 15%;
+    margin: 10% auto;
     background: #fff;
     box-shadow: 0 5px 15px #999;
     border-radius: 5px;
+    position: relative;
     .new {
       display: block;
       width: 120px;

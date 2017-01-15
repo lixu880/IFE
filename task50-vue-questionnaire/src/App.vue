@@ -41,7 +41,6 @@
   p {
     margin: 0;
     padding: 0;
-    font-family: "Microsoft Yahei";
   }
   
   li {
@@ -79,15 +78,15 @@
   }
   
   .app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
+    font-family: "Microsoft Yahei", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     width: 100%;
     height: 100%;
-    color: #2c3e50;
+    color: #000;
     position: relative;
     >header {
-      background: #23b1e8;
+      background: #42b983;
       width: 100%;
       height: 50px;
       line-height: 50px;

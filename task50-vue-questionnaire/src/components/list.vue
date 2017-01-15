@@ -1,65 +1,135 @@
 <template>
   <table>
-    {{qnss}}
     <thead>
       <tr>
-        <th>标题</th>
-        <th>时间</th>
-        <th>状态</th>
-        <th>操作</th>
+        <th class="title">标题</th>
+        <th class="time">截止日期</th>
+        <th class="status">状态</th>
+        <th class="handle">操作</th>
       </tr>
     </thead>
     <tbody>
       <tr v-for="qns in qnss">
         <td>{{qns.title}}</td>
         <td>{{qns.deadline}}</td>
-        <td>{{qns.status}}</td>
-        <td><span>发布/填写</span><span>数据</span><span>删除</span></td>
+        <td :class="statusStyle(qns)">{{statusText(qns)}}</td>
+        <td class="handle-btns"><span v-if="qns.status == 1" @click="qns.status = 2">发布问卷</span><span v-if="qns.status == 1">编辑问卷</span><span v-if="qns.status == 2">填写问卷</span><span
+            v-if="qns.status != 1">查看数据</span><span @click="delQns(qns)">删除问卷</span></td>
       </tr>
     </tbody>
   </table>
 </template>
 <script>
-  import bus from '../main';
-
   export default {
     name: 'list',
-    data() {
-      return {
-        msg: {},
-        qnss: [
-          {
-            title: 'aaa',
-            deadline: '1900',
-            status: 'dead',
-            qns: [],
-          },
-          {
-            title: 'bbb',
-            deadline: '1991',
-            status: 'alive',
-            qns: [],
-          },
-        ],
-      };
+    // 如果没有数据跳空白页
+    created() {
+      if (this.$store.state.qnss.length === 0) {
+        this.$router.push({ path: '/' });
+      }
     },
-    beforeCreated() {
-      bus.$on('save', (data) => {
-        this.msg = data;
-      });
+    computed: {
+      qnss() {
+        return this.$store.state.qnss;
+      },
+    },
+    methods: {
+      statusText(qns) {
+        const status = qns.status;
+        switch (status) {
+          case 1:
+            return '已保存';
+          case 2:
+            return '已发布';
+          case 3:
+            return '已截止';
+          default:
+            return '';
+        }
+      },
+      statusStyle(qns) {
+        const status = qns.status;
+        switch (status) {
+          case 1:
+            return 'red';
+          case 2:
+            return 'green';
+          case 3:
+            return 'gray';
+          default:
+            return '';
+        }
+      },
+      delQns(qns) {
+        this.$store.commit('delQns', qns);
+      },
+    },
+    watch: {
+      qnss(qnss) {
+        if (qnss.length === 0) {
+          this.$router.push({ path: '/' });
+        }
+      },
     },
   };
 
 </script>
 <style lang="scss" scoped>
-  .blank {
-    width: 70%;
-    position: absolute;
-    top: 20%;
-    left: 15%;
+  table {
+    width: 60%;
+    margin: 10% auto;
+    // padding: 30px;
     background: #fff;
-    box-shadow: 0 5px 15px #999;
+    border: 2px solid #42b983;
+    // box-shadow: 0 5px 15px #999;
     border-radius: 5px;
+    position: relative;
+    text-align: center;
+    line-height: 1.5;
+    th {
+      height: 50px;
+      color: #fff;
+      background: #42b983;
+      font-size: 18px;
+      font-weight: 700;
+      &.title {
+        width: 30%;
+      }
+      &.time {
+        width: 20%;
+      }
+      &.status {
+        width: 10%;
+      }
+      &.handle {
+        width: 40%;
+      }
+    }
+    td {
+      height: 50px;
+      background: #eee;
+      &.status-color {
+        color: #f00;
+      }
+      &.handle-btns {
+        >span {
+          margin: 0 10px;
+          padding: 5px 10px;
+          border: 1px solid rgba(0, 0, 0, .6);
+          border-radius: 5px;
+          cursor: pointer;
+        }
+      }
+      &.red {
+        color: red;
+      }
+      &.green {
+        color: green;
+      }
+      &.gray {
+        color: gray;
+      }
+    }
   }
 
 </style>
