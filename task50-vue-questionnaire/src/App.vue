@@ -4,12 +4,13 @@
       <a href="#/newqn">
         <h2>新建问卷</h2>
       </a>
-      <a href="#">
+      <a href="#/list">
         <h2>我的问卷</h2>
       </a>
     </header>
     <router-link to="/"></router-link>
     <router-link to="/newqn"></router-link>
+    <router-link to="/list"></router-link>
     <transition enter-active-class="animated zoomIn">
       <router-view></router-view>
     </transition>

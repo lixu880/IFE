@@ -6,6 +6,7 @@ import 'animate.css';
 import App from './App';
 import Blank from './components/blank';
 import Newqn from './components/newqn';
+import List from './components/list';
 
 Vue.use(VueRouter);
 
@@ -23,6 +24,10 @@ const router = new VueRouter({
     {
       path: '/newqn',
       component: Newqn,
+    },
+    {
+      path: '/list',
+      component: List,
     },
   ],
 });

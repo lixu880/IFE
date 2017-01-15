@@ -29,7 +29,7 @@
     <hr>
     <footer>
       <div class="deadline"><span>问卷截止日期：</span><input type="text"></div>
-      <div class="btns"><a>保存问卷</a><a>发布问卷</a></div>
+      <a class="btns" @click="saveQns" href="#/list"><span>保存问卷</span></a>
     </footer>
   </div>
 </template>
@@ -161,7 +161,7 @@
     .btns {
       float: right;
       margin-right: 40px;
-      >a {
+      >span {
         margin: 0 10px;
         padding: 5px 15px;
         border: 1px solid #ccc;

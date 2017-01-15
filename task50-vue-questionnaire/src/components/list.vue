@@ -1,7 +1,23 @@
 <template>
-  <div class="blank">
-    <a class="new" href="#/newqn"><i class="iconfont icon-jia"></i>新建问卷</a>
-  </div>
+  <table>
+    {{qnss}}
+    <thead>
+      <tr>
+        <th>标题</th>
+        <th>时间</th>
+        <th>状态</th>
+        <th>操作</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr v-for="qns in qnss">
+        <td>{{qns.title}}</td>
+        <td>{{qns.deadline}}</td>
+        <td>{{qns.status}}</td>
+        <td><span>发布/填写</span><span>数据</span><span>删除</span></td>
+      </tr>
+    </tbody>
+  </table>
 </template>
 <script>
   import bus from '../main';
@@ -10,12 +26,26 @@
     name: 'list',
     data() {
       return {
-        qnss: []
-      }
+        msg: {},
+        qnss: [
+          {
+            title: 'aaa',
+            deadline: '1900',
+            status: 'dead',
+            qns: [],
+          },
+          {
+            title: 'bbb',
+            deadline: '1991',
+            status: 'alive',
+            qns: [],
+          },
+        ],
+      };
     },
-    created() {
+    beforeCreated() {
       bus.$on('save', (data) => {
-        qnss.push(data);
+        this.msg = data;
       });
     },
   };
