@@ -7,7 +7,7 @@
   export default {
     name: 'blank',
     // 如果有数据跳列表页
-    created() {
+    beforeCreate() {
       if (this.$store.state.qnss.length !== 0) {
         this.$router.push({ path: '/list' });
       }

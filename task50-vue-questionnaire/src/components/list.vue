@@ -1,5 +1,5 @@
 <template>
-  <table>
+  <table v-if="qnss.length != 0">
     <thead>
       <tr>
         <th class="title">标题</th>
@@ -13,17 +13,19 @@
         <td>{{qns.title}}</td>
         <td>{{qns.deadline}}</td>
         <td :class="statusStyle(qns)">{{statusText(qns)}}</td>
-        <td class="handle-btns"><span v-if="qns.status == 1" @click="qns.status = 2">发布问卷</span><span v-if="qns.status == 1">编辑问卷</span><span v-if="qns.status == 2">填写问卷</span><span
+        <td class="handle-btns"><span v-if="qns.status == 1" @click="publish(qns)">发布问卷</span><span v-if="qns.status == 1">编辑问卷</span><span v-if="qns.status == 2">填写问卷</span><span
             v-if="qns.status != 1">查看数据</span><span @click="delQns(qns)">删除问卷</span></td>
       </tr>
     </tbody>
   </table>
 </template>
 <script>
+  // template里@click="qns.status"没有通过commit的方式改变了state里面的数据
+
   export default {
     name: 'list',
     // 如果没有数据跳空白页
-    created() {
+    beforeCreate() {
       if (this.$store.state.qnss.length === 0) {
         this.$router.push({ path: '/' });
       }
@@ -63,10 +65,14 @@
       delQns(qns) {
         this.$store.commit('delQns', qns);
       },
+      publish(qns) {
+        this.$store.commit('updateQnss', qns);
+      },
     },
     watch: {
-      qnss(qnss) {
-        if (qnss.length === 0) {
+      // 监控qnss，删除至空的时候跳空白页
+      qnss(curval) {
+        if (curval.length === 0) {
           this.$router.push({ path: '/' });
         }
       },

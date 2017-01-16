@@ -1,11 +1,11 @@
 <template>
-  <div class="app">
+  <div class="app" v-cloak>
     <header><a href="#"><i class="iconfont icon-wen"></i><h1>简问卷</h1></a>
-      <a href="#/newqn">
-        <h2>新建问卷</h2>
-      </a>
       <a href="#/list">
         <h2>我的问卷</h2>
+      </a>
+      <a href="#/newqn">
+        <h2>新建问卷</h2>
       </a>
     </header>
     <router-link to="/"></router-link>
@@ -77,6 +77,10 @@
     -moz-osx-font-smoothing: grayscale;
   }
   
+  [v-cloak] {
+    display: none;
+  }
+
   .app {
     font-family: "Microsoft Yahei", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;

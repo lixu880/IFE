@@ -42,7 +42,7 @@
         aQns: {
           title: '',
           deadline: '',
-          status: '',
+          status: 1,
           qns: [],
         },
       };

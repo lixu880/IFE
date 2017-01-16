@@ -26,13 +26,13 @@ const store = new Vuex.Store({
       {
         title: 'aaa',
         deadline: '1900',
-        status: 2,
+        status: 1,
         qns: [],
       },
       {
         title: 'aaa',
         deadline: '1900',
-        status: 3,
+        status: 1,
         qns: [],
       },
     ],
@@ -43,6 +43,13 @@ const store = new Vuex.Store({
     },
     delQns(state, payload) {
       state.qnss.splice(state.qnss.indexOf(payload), 1);
+    },
+    updateQnss(state, payload) {
+      // status这个参数是必需的，不然改变数据不会引发view更新，及时这里没有用到
+      const obj = payload;
+      if (state.qnss.indexOf(payload) !== -1) {
+        obj.status = 2;
+      }
     },
   },
 });
