@@ -1,115 +1,59 @@
 <template>
-  <div class="new-qn">
-    <input class="title" type="text" autocomplete="off" placeholder="请填写问卷标题" v-model="aQns.title">
+  <div class="new-qn" v-if="fillQns">
+    <h2 class="title">{{fillQns.title}}</h2>
     <hr>
-    <div class="qnlist" v-for="(qn, index1) in aQns.qns">
-      <div><span>{{'Q' + (index1 + 1) + '：'}}</span><input class="qn-title" type="text" v-model="qn.question" @focus="select"></div>
+    <div class="qnlist" v-for="(qn, index1) in fillQns.qns">
+      <div><span>{{'Q' + (index1 + 1) + '：'}}</span><span class="qn-title">{{qn.question}}</span></div>
       <ul v-if="qn.type != 'textarea'">
         <li class="item" v-for="(item, index2) in qn.options">
-          <input class="type" :type="qn.type" :name="'item' + index1">
-          <input class="options" type="text" v-model="qn.options[index2]" @focus="select">
-          <i class="iconfont icon-x" @click="removeOp(item, qn)" v-if="qn.options.length > 2"></i>
+          <input class="type" type="radio" :name="'item' + index1" v-if="qn.type === 'radio'" :value="index2" v-model="qn.value">
+          <input class="type" type="checkbox" :name="'item' + index1" v-if="qn.type === 'checkbox'" :value="index2" @click="checkValue(qn, $event)">
+          <span class="options">{{qn.options[index2]}}</span>
         </li>
-        <li class="addOp" @click="addOp(qn)"><i class="iconfont icon-jia"></i></li>
       </ul>
-      <textarea class="textarea" v-model="qn.options" v-if="qn.type == 'textarea'" @focus.once="select"></textarea>
-      <div>
-        <button @click="removeQn(qn)">删除</button>
-        <button @click="copyQn(qn)">复用</button>
-        <button @click="moveUp(qn)" :disabled="index1 == 0">上移</button>
-        <button @click="moveDown(qn)" :disabled="index1 == aQns.qns.length - 1">下移</button>
+      <div v-if="qn.type === 'textarea'">
+        <p>{{qn.options}}</p>
+        <textarea class="textarea" v-model="text" @blur="textValue(qn)"></textarea>
       </div>
     </div>
-    <section class="qn-tag" :class="{show: tag}">
-      <div class="radio" @click="addRadio"><i class="iconfont icon-1"></i>单选</div>
-      <div class="checkbox" @click="addCheckBox"><i class="iconfont icon-duoxuan"></i>多选</div>
-      <div class="text" @click="addText"><i class="iconfont icon-c_icon2"></i>简答</div>
-    </section>
-    <section class="add-qn" @click="tag = !tag"><i class="iconfont icon-jia"></i>添加问题</section>
     <hr>
     <footer>
-      <div class="deadline"><span>问卷截止日期：</span><input type="text" v-model="aQns.deadline"></div>
-      <a class="btns" @click="saveQns" href="#/list"><span>保存问卷</span></a>
+      <a class="btns" @click="saveFill"><span>提交问卷</span></a>
     </footer>
   </div>
 </template>
 <script>
   export default {
-    name: 'newQn',
+    name: 'fillqn',
     data() {
-      return {
-        tag: false,
-        aQns: {
-          title: '',
-          deadline: '',
-          status: 1,
-          qns: [],
-        },
-      };
+      return { text: '' };
     },
-    mounted() {
-      if (this.$store.state.editing) {
-        this.aQns = this.$store.state.editing;
+    computed: {
+      fillQns() {
+        return this.$store.state.fillQns;
+      },
+    },
+    // 当fillQns = null时跳list页
+    created() {
+      if (!this.fillQns) {
+        this.$router.push('/list');
       }
     },
     methods: {
-      addRadio() {
-        this.aQns.qns.push({
-          question: '单选题',
-          type: 'radio',
-          options: ['选项1', '选项2', '选项3'],
-          value: [],
-        });
-      },
-      addCheckBox() {
-        this.aQns.qns.push({
-          question: '多选题',
-          type: 'checkbox',
-          options: ['选项1', '选项2', '选项3'],
-          value: [],
-        });
-      },
-      addText() {
-        this.aQns.qns.push({
-          question: '简答题',
-          type: 'textarea',
-          options: '问题描述',
-          value: 0,
-        });
-      },
-      removeQn(qn) {
-        const tQns = this.aQns.qns;
-        tQns.splice(tQns.indexOf(qn), 1);
-      },
-      moveDown(qn) {
-        const tQns = this.aQns.qns;
-        const qnIndex = tQns.indexOf(qn);
-        tQns.splice(qnIndex, 1);
-        tQns.splice(qnIndex + 1, 0, qn);
-      },
-      moveUp(qn) {
-        const tQns = this.aQns.qns;
-        const qnIndex = tQns.indexOf(qn);
-        tQns.splice(qnIndex, 1);
-        tQns.splice(qnIndex - 1, 0, qn);
-      },
-      copyQn(qn) {
-        const tQns = this.aQns.qns;
-        tQns.splice(tQns.indexOf(qn) + 1, 0, qn);
-      },
-      select(e) {
-        e.target.select();
-      },
-      removeOp(item, qn) {
-        if (qn.options.length > 2) {
-          qn.options.splice(qn.options.indexOf(item), 1);
+      // checkValue(qn, e) {
+      //   if (e.target.checked) {
+      //     qn.value.push(e.target.value);
+      //   }
+      // },
+      textValue(qn) {
+        const obj = qn;
+        if (this.text) {
+          obj.value += 1;
         }
       },
-      addOp(qn) {
-        qn.options.push(`选项${qn.options.length + 1}`);
-      },
-      saveQns() {
-        this.$store.commit('saveQns', this.aQns);
+      saveFill() {
+        this.$store.commit('saveFill');
+        this.$router.push('/list');
       },
     },
   };

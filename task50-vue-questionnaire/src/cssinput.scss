@@ -1,4 +1,1 @@
-enter-active-class="animated fadeInUp" leave-active-class="animated fadeOut"
-a {
-    cur
-}
+      <textarea class="textarea" v-model="qn.value">{{qn.options[0]}}</textarea>

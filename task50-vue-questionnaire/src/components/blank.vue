@@ -1,17 +1,17 @@
 <template>
   <div class="blank">
-    <a class="new" href="#/newqn"><i class="iconfont icon-jia"></i>新建问卷</a>
+    <a class="new" href="#/newqn"><i class="iconfont icon-jia"></i>Start</a>
   </div>
 </template>
 <script>
   export default {
     name: 'blank',
     // 如果有数据跳列表页
-    beforeCreate() {
-      if (this.$store.state.qnss.length !== 0) {
-        this.$router.push({ path: '/list' });
-      }
-    },
+    // beforeCreate() {
+    //   if (this.$store.state.qnss.length !== 0) {
+    //     this.$router.push({ path: '/list' });
+    //   }
+    // },
   };
 
 </script>

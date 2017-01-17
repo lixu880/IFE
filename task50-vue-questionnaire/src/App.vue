@@ -17,8 +17,27 @@
   </div>
 </template>
 <script>
+  // watch[qnss]存入localStorage
+  const STORAGE_KEY = 'questionaire-by-vuejs';
+  function saveLocal(qnss) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(qnss));
+  }
+
   export default {
     name: 'app',
+    computed: {
+      qnss() {
+        return this.$store.state.qnss;
+      },
+    },
+    watch: {
+      qnss: {
+        handler(qnss) {
+          saveLocal(qnss);
+        },
+        deep: true,
+      },
+    },
   };
 
 </script>
@@ -80,7 +99,7 @@
   [v-cloak] {
     display: none;
   }
-
+  
   .app {
     font-family: "Microsoft Yahei", Helvetica, Arial, sans-serif;
     -webkit-font-smoothing: antialiased;
