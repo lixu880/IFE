@@ -6,14 +6,14 @@
       <div><span>{{'Q' + (index1 + 1) + '：'}}</span><span class="qn-title">{{qn.question}}</span></div>
       <ul v-if="qn.type != 'textarea'">
         <li class="item" v-for="(item, index2) in qn.options">
-          <input class="type" type="radio" :name="'item' + index1" v-if="qn.type === 'radio'" :value="index2" v-model="qn.value">
-          <input class="type" type="checkbox" :name="'item' + index1" v-if="qn.type === 'checkbox'" :value="index2" @click="checkValue(qn, $event)">
+          <input class="type" type="radio" :name="'item' + index1" v-if="qn.type === 'radio'" :value="index2" :ref="'radio' + index1">
+          <input class="type" type="checkbox" v-if="qn.type === 'checkbox'" :value="index2" :ref="'checkbox' + index1">
           <span class="options">{{qn.options[index2]}}</span>
         </li>
       </ul>
       <div v-if="qn.type === 'textarea'">
         <p>{{qn.options}}</p>
-        <textarea class="textarea" v-model="text" @blur="textValue(qn)"></textarea>
+        <textarea class="textarea" :ref="'text' + index1"></textarea>
       </div>
     </div>
     <hr>
@@ -25,9 +25,6 @@
 <script>
   export default {
     name: 'fillqn',
-    data() {
-      return { text: '' };
-    },
     computed: {
       fillQns() {
         return this.$store.state.fillQns;
@@ -40,18 +37,28 @@
       }
     },
     methods: {
-      // checkValue(qn, e) {
-      //   if (e.target.checked) {
-      //     qn.value.push(e.target.value);
-      //   }
-      // },
-      textValue(qn) {
-        const obj = qn;
-        if (this.text) {
-          obj.value += 1;
-        }
-      },
       saveFill() {
+        // 提交问卷时获取value 这里没有通过commit改变了store里的数据
+        const qns = this.fillQns.qns;
+        for (let i = 0; i < qns.length; i += 1) {
+          const rRef = `radio${i}`;
+          const cRef = `checkbox${i}`;
+          const tRef = `text${i}`;
+          const item = this.$refs[rRef] || this.$refs[cRef] || this.$refs[tRef];
+          if (item.length && item.length > 1) {
+            item.forEach((el, index) => {
+              if (el.checked) {
+                qns[i].value.push(index);
+              }
+            });
+          } else {
+            // 判断简答题是否为空
+            const content = item[0].value && item[0].value.trim();
+            if (content) {
+              qns[i].value += 1;
+            }
+          }
+        }
         this.$store.commit('saveFill');
         this.$router.push('/list');
       },

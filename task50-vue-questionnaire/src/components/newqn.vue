@@ -42,7 +42,7 @@
         aQns: {
           title: '',
           deadline: '',
-          status: 1,
+          status: 0,
           qns: [],
         },
       };
@@ -74,6 +74,7 @@
           question: '简答题',
           type: 'textarea',
           options: '问题描述',
+          // 记录完成简答的次数
           value: 0,
         });
       },
