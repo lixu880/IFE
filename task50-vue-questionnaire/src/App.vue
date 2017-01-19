@@ -1,16 +1,17 @@
 <template>
   <div class="app" v-cloak>
-    <header><a href="#"><i class="iconfont icon-wen"></i><h1>简问卷</h1></a>
-      <a href="#/list">
+    <header>
+      <router-link to="/">
+        <i class="iconfont icon-wen"></i>
+        <h1>简问卷</h1>
+      </router-link>
+      <router-link to="/list">
         <h2>我的问卷</h2>
-      </a>
-      <a href="#/newqn">
+      </router-link>
+      <router-link to="/newqn">
         <h2>新建问卷</h2>
-      </a>
+      </router-link>
     </header>
-    <router-link to="/"></router-link>
-    <router-link to="/newqn"></router-link>
-    <router-link to="/list"></router-link>
     <transition enter-active-class="animated zoomIn">
       <router-view></router-view>
     </transition>
@@ -19,21 +20,22 @@
 <script>
   // watch[qnss]存入localStorage
   const STORAGE_KEY = 'questionaire-by-vuejs';
-  function saveLocal(qnss) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(qnss));
+
+  function saveLocal(state) {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
   }
 
   export default {
     name: 'app',
     computed: {
-      qnss() {
-        return this.$store.state.qnss;
+      state() {
+        return this.$store.state;
       },
     },
     watch: {
-      qnss: {
-        handler(qnss) {
-          saveLocal(qnss);
+      state: {
+        handler(state) {
+          saveLocal(state);
         },
         deep: true,
       },

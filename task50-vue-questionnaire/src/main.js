@@ -11,6 +11,7 @@ import Blank from './components/blank';
 import Newqn from './components/newqn';
 import List from './components/list';
 import Fillqn from './components/fillqn';
+import Viewdata from './components/viewdata';
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,10 @@ const router = new VueRouter({
     {
       path: '/fillqn',
       component: Fillqn,
+    },
+    {
+      path: '/viewdata',
+      component: Viewdata,
     },
   ],
 });

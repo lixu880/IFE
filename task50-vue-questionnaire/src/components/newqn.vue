@@ -8,7 +8,7 @@
         <li class="item" v-for="(item, index2) in qn.options">
           <input class="type" :type="qn.type" :name="'item' + index1">
           <input class="options" type="text" v-model="qn.options[index2]" @focus="select">
-          <i class="iconfont icon-x" @click="removeOp(item, qn)" v-if="qn.options.length > 2"></i>
+          <i class="iconfont icon-x" @click="removeOp(item, qn)" v-if="limitLength(qn)"></i>
         </li>
         <li class="addOp" @click="addOp(qn)"><i class="iconfont icon-jia"></i></li>
       </ul>
@@ -53,6 +53,16 @@
       }
     },
     methods: {
+      // 限制单选最少两个选项，多选最少三个选项，因为多选用的雷达图
+      limitLength(qn) {
+        let bool;
+        if (qn.type === 'radio') {
+          bool = qn.options.length > 2;
+        } else {
+          bool = qn.options.length > 3;
+        }
+        return bool;
+      },
       addRadio() {
         this.aQns.qns.push({
           question: '单选题',
@@ -65,7 +75,7 @@
         this.aQns.qns.push({
           question: '多选题',
           type: 'checkbox',
-          options: ['选项1', '选项2', '选项3'],
+          options: ['选项1', '选项2', '选项3', '选项4'],
           value: [],
         });
       },
@@ -74,8 +84,7 @@
           question: '简答题',
           type: 'textarea',
           options: '问题描述',
-          // 记录完成简答的次数
-          value: 0,
+          value: [0],
         });
       },
       removeQn(qn) {

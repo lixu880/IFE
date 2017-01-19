@@ -1,0 +1,227 @@
+<template>
+  <div class="new-qn" v-if="viewData">
+    <h2 class="title">{{viewData.title}}</h2>
+    <hr>
+    <div class="qnlist" v-for="(qn, index1) in viewData.qns">
+      <div><span>{{'Q' + (index1 + 1) + '：'}}</span><span class="qn-title">{{qn.question}}</span></div>
+      <div class="charts" :class="'chart' + index1"></div>
+    </div>
+    <hr>
+    <footer>
+      <router-link to="/list" class="btns"><span>确定</span></router-link>
+    </footer>
+  </div>
+</template>
+<script>
+  import Echarts from 'echarts';
+
+  function getRadioValue(qn) {
+    let result = [];
+    // 求每个选项选了多少次
+    qn.options.forEach((el, i) => {
+      const val = qn.value.filter(ele => ele === i).length;
+      const obj = {
+        value: val,
+        name: el,
+      };
+      if (val) {
+        result.push(obj);
+      }
+    });
+    result = result.length ? result : [{
+      name: '暂无数据',
+      value: 0,
+    }];
+    return result;
+  }
+
+  function getCheckValue(qn) {
+    const result = {
+      textArr: [],
+      valArr: [],
+    };
+
+    // 求qn.value中的最大值
+    let maxVal = 0;
+    qn.value.forEach((el) => {
+      if (el > maxVal) {
+        maxVal = el;
+      }
+    });
+    // 求每个选项选了多少次
+    qn.options.forEach((el, i) => {
+      const val = qn.value.filter(ele => ele === i).length;
+      const obj = {
+        text: el,
+        max: maxVal,
+      };
+      result.textArr.push(obj);
+      result.valArr.push(val);
+    });
+    return result;
+  }
+
+  export default {
+    name: 'viewdata',
+    computed: {
+      viewData() {
+        return this.$store.state.viewData;
+      },
+    },
+    mounted() {
+      this.viewData.qns.forEach((el, index) => {
+        if (el.type === 'radio') {
+          // 饼图
+          const chartOption = {
+            tooltip: {
+              trigger: 'item',
+              formatter: '{b} : {c} ({d}%)',
+            },
+            color: ['#f35833', '#00ccff', '#ffcc00', '#8fc31f', '#749f83', '#ca8622', '#bda29a',
+              '#6e7074', '#546570', '#c4ccd3',
+            ],
+            series: [{
+              type: 'pie',
+              radius: '55%',
+              center: ['50%', '60%'],
+              data: getRadioValue(el),
+            }],
+          };
+          const chart = Echarts.init(document.querySelector(`.chart${index}`));
+          chart.setOption(chartOption);
+        } else if (el.type === 'checkbox') {
+          const result = getCheckValue(el);
+          // 柱形图option
+          const chartOption = {
+            tooltip: {
+              trigger: 'axis',
+            },
+            radar: [{
+              indicator: result.textArr,
+              center: ['50%', '50%'],
+              radius: 80,
+            },
+            ],
+            series: [{
+              type: 'radar',
+              tooltip: {
+                trigger: 'item',
+              },
+              itemStyle: {
+                normal: {
+                  areaStyle: {
+                    type: 'default',
+                  },
+                },
+              },
+              data: [{
+                value: result.valArr,
+              }],
+            },
+            ],
+          };
+          const chart = Echarts.init(document.querySelector(`.chart${index}`));
+          chart.setOption(chartOption);
+        } else {
+          // 横向柱形图
+          const chartOption = {
+            color: ['#49f4c3'],
+            tooltip: {
+              trigger: 'axis',
+              formatter: '{b} : {c}',
+            },
+            grid: {
+              left: '5%',
+              right: '5%',
+              top: '10%',
+              containLabel: true,
+            },
+            xAxis: {
+              type: 'value',
+            },
+            yAxis: {
+              type: 'category',
+              data: ['有效回答'],
+            },
+            series: [{
+              type: 'bar',
+              barWidth: '30%',
+              label: {
+                normal: {
+                  show: true,
+                  position: 'right',
+                },
+              },
+              data: el.value,
+            },
+            ],
+          };
+          const chart = Echarts.init(document.querySelector(`.chart${index}`));
+          chart.setOption(chartOption);
+        }
+      });
+    },
+  };
+
+</script>
+<style lang="scss" scoped>
+  .new-qn {
+    width: 60%;
+    margin: 10% auto;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 5px 15px #999;
+    border-radius: 5px;
+    padding: 25px;
+    position: relative;
+    .title {
+      width: 100%;
+      height: 40px;
+      border: none;
+      text-align: center;
+      font-size: 30px;
+    }
+    // 分割线
+    >hr {
+      margin: 20px 0;
+    }
+    // 底部按钮
+    .btns {
+      display: block;
+      text-align: center;
+      color: #000;
+      >span {
+        margin: 0 10px;
+        padding: 5px 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 3px 6px #999;
+        &:hover {
+          color: #fff;
+          background: #42B983;
+        }
+      }
+    }
+    // 问卷列表
+    .qnlist {
+      padding: 20px 40px;
+      font-size: 18px;
+      &:hover {
+        background: #fef1e8;
+        input,
+        textarea {
+          background: #fef1e8;
+        }
+      }
+      .qn-title {
+        height: 25px;
+        font-size: 20px;
+      }
+      .charts {
+        width: 100%;
+        height: 300px;
+      }
+    }
+  }
+
+</style>

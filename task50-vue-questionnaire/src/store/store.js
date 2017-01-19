@@ -7,8 +7,16 @@ Vue.use(Vuex);
 const STORAGE_KEY = 'questionaire-by-vuejs';
 
 function fetchLocal() {
-  const qnss = JSON.parse(localStorage.getItem(STORAGE_KEY) || '[]');
-  return qnss;
+  let state = JSON.parse(localStorage.getItem(STORAGE_KEY));
+  if (!state || !state.qnss) {
+    state = {
+      qnss: [],
+      editing: null,
+      fillQns: null,
+      viewData: null,
+    };
+  }
+  return state;
 }
 
 const store = new Vuex.Store({
@@ -37,17 +45,14 @@ const store = new Vuex.Store({
   //       question: '简答题',
   //       type: 'textarea',
   //       options: '问题描述',
-  //       value: 0,
+  //       value: [],
   //     }, ]
   //   }, ],
   //   editing: null,
   //   fillQns: null,
+  //   viewData: null,
   // }
-  state: {
-    qnss: fetchLocal(),
-    editing: null,
-    fillQns: null,
-  },
+  state: fetchLocal(),
   mutations: {
     saveQns(state, payload) {
       const obj = state;
@@ -78,6 +83,10 @@ const store = new Vuex.Store({
     saveFill(state) {
       const obj = state;
       obj.fillQns = null;
+    },
+    viewData(state, payload) {
+      const obj = state;
+      obj.viewData = payload;
     },
   },
 });

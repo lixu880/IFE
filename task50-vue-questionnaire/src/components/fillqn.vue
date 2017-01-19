@@ -30,12 +30,6 @@
         return this.$store.state.fillQns;
       },
     },
-    // 当fillQns = null时跳list页
-    created() {
-      if (!this.fillQns) {
-        this.$router.push('/list');
-      }
-    },
     methods: {
       saveFill() {
         // 提交问卷时获取value 这里没有通过commit改变了store里的数据
@@ -55,7 +49,7 @@
             // 判断简答题是否为空
             const content = item[0].value && item[0].value.trim();
             if (content) {
-              qns[i].value += 1;
+              qns[i].value[0] += 1;
             }
           }
         }
@@ -87,34 +81,7 @@
     >hr {
       margin: 20px 0;
     }
-    // 添加问卷的大框
-    .add-qn {
-      height: 100px;
-      margin: 20px;
-      text-align: center;
-      background: #eee;
-      border: 1px solid #ccc;
-      cursor: pointer;
-      background: rgba(250, 255, 158, 0.59);
-      &:before {
-        content: '';
-        display: inline-block;
-        height: 100%;
-        vertical-align: middle;
-      }
-      .icon-jia:before {
-        content: "\e618";
-        font-size: 24px;
-        vertical-align: middle;
-        margin-right: 10px;
-      }
-    }
-    // 日期选择
-    .deadline {
-      float: left;
-      margin-left: 40px;
-    }
-    // 保存发布按钮
+    // 底部按钮
     .btns {
       float: right;
       margin-right: 40px;
@@ -127,41 +94,6 @@
         &:hover {
           color: #fff;
           background: #42B983;
-        }
-      }
-    }
-    // 需要添加问卷的类型
-    .qn-tag {
-      height: 0;
-      margin-top: 20px;
-      overflow: hidden;
-      text-align: center;
-      transition: height .3s ease;
-      &.show {
-        height: 55px;
-      }
-      >div {
-        display: inline-block;
-        margin: 0 10px;
-        padding: 10px 20px;
-        background: #eee;
-        border: 1px solid #ccc;
-        border-radius: 5px;
-        box-shadow: 0 3px 6px #999;
-        cursor: pointer;
-        >i {
-          margin-right: 5px;
-          font-size: 18px;
-          vertical-align: middle;
-        }
-        .icon-1:before {
-          content: "\e624";
-        }
-        .icon-duoxuan:before {
-          content: "\e608";
-        }
-        .icon-c_icon2:before {
-          content: "\e602";
         }
       }
     }
@@ -191,19 +123,6 @@
         .type {
           width: 20px;
           height: 20px;
-        }
-      }
-      // 添加选项
-      .addOp {
-        height: 25px;
-        text-align: center;
-        cursor: pointer;
-        &:hover {
-          border: 1px dashed #000;
-          .icon-jia:before {
-            content: "\e618";
-            vertical-align: middle;
-          }
         }
       }
       .qn-title {
