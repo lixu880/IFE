@@ -69,37 +69,49 @@
       },
     },
     mounted() {
+      let chartOption = {};
       this.viewData.qns.forEach((el, index) => {
         if (el.type === 'radio') {
-          // 饼图
-          const chartOption = {
+          // 单选用饼图
+          chartOption = {
             tooltip: {
               trigger: 'item',
               formatter: '{b} : {c} ({d}%)',
             },
-            color: ['#f35833', '#00ccff', '#ffcc00', '#8fc31f', '#749f83', '#ca8622', '#bda29a',
-              '#6e7074', '#546570', '#c4ccd3',
-            ],
+            color: ['#f35833', '#00ccff', '#ffcc00', '#8fc31f', '#FF00FF', '#3366FF', '#3399FF',
+              '#FF9900'],
             series: [{
               type: 'pie',
               radius: '55%',
               center: ['50%', '60%'],
               data: getRadioValue(el),
+              label: {
+                normal: {
+                  textStyle: {
+                    fontSize: 16,
+                  },
+                },
+              },
             }],
           };
-          const chart = Echarts.init(document.querySelector(`.chart${index}`));
-          chart.setOption(chartOption);
         } else if (el.type === 'checkbox') {
           const result = getCheckValue(el);
-          // 柱形图option
-          const chartOption = {
+          // 多选用雷达图
+          chartOption = {
             tooltip: {
               trigger: 'axis',
             },
+            color: ['#FF3399'],
             radar: [{
               indicator: result.textArr,
               center: ['50%', '50%'],
               radius: 80,
+              name: {
+                textStyle: {
+                  color: '#000',
+                  fontSize: 16,
+                },
+              },
             },
             ],
             series: [{
@@ -116,19 +128,24 @@
               },
               data: [{
                 value: result.valArr,
+                name: '详细数据',
               }],
             },
             ],
           };
-          const chart = Echarts.init(document.querySelector(`.chart${index}`));
-          chart.setOption(chartOption);
         } else {
-          // 横向柱形图
-          const chartOption = {
+          // 简答柱形图
+          chartOption = {
             color: ['#49f4c3'],
             tooltip: {
               trigger: 'axis',
               formatter: '{b} : {c}',
+              axisPointer: {
+                type: 'shadow',
+                shadowStyle: {
+                  color: 'transparent',
+                },
+              },
             },
             grid: {
               left: '5%',
@@ -138,10 +155,18 @@
             },
             xAxis: {
               type: 'value',
+              splitLine: {
+                show: false,
+              },
             },
             yAxis: {
               type: 'category',
               data: ['有效回答'],
+              axisLabel: {
+                textStyle: {
+                  fontSize: 16,
+                },
+              },
             },
             series: [{
               type: 'bar',
@@ -150,15 +175,19 @@
                 normal: {
                   show: true,
                   position: 'right',
+                  textStyle: {
+                    color: '#000',
+                    fontSize: 20,
+                  },
                 },
               },
               data: el.value,
             },
             ],
           };
-          const chart = Echarts.init(document.querySelector(`.chart${index}`));
-          chart.setOption(chartOption);
         }
+        const chart = Echarts.init(document.querySelector(`.chart${index}`));
+        chart.setOption(chartOption);
       });
     },
   };

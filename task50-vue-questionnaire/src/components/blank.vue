@@ -1,6 +1,6 @@
 <template>
   <div class="blank">
-    <a class="new" href="#/newqn"><i class="iconfont icon-jia"></i>Start</a>
+    <a class="new" href="#/newqn"><i class="iconfont icon-jia"></i>Get Start</a>
   </div>
 </template>
 <script>
