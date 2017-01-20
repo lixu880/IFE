@@ -88,6 +88,15 @@ const store = new Vuex.Store({
       const obj = state;
       obj.viewData = payload;
     },
+    // 超过deadline更新status=2
+    deadLine(state) {
+      state.qnss.forEach((el) => {
+        const obj = el;
+        if (new Date(obj.deadline) < new Date()) {
+          obj.status = 2;
+        }
+      });
+    },
   },
 });
 

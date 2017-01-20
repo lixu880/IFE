@@ -33,6 +33,7 @@
       if (this.qnss.length === 0) {
         this.$router.push('/');
       }
+      this.$store.commit('deadLine');
     },
     methods: {
       statusText(qns) {

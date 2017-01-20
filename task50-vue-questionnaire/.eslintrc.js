@@ -24,7 +24,8 @@ module.exports = {
       'js': 'never',
       'vue': 'never'
     }],
-    
+    // 关掉缩进报错
+    'indent': 0,
     // allow debugger during development
     'no-debugger': process.env.NODE_ENV === 'production' ? 2 : 0
   },

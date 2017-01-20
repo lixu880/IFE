@@ -28,12 +28,18 @@
     <section class="add-qn" @click="tag = !tag"><i class="iconfont icon-jia"></i>添加问题</section>
     <hr>
     <footer>
-      <div class="deadline"><span>问卷截止日期：</span><input type="text" v-model="aQns.deadline"></div>
+      <div class="deadline">
+        <span>截止日期：</span>
+        <date-picker :date="date" :option="option" :limit="limit" v-model="aQns.deadline"></date-picker>
+      </div>
       <a class="btns" @click="saveQns" href="#/list"><span>保存问卷</span></a>
     </footer>
   </div>
 </template>
 <script>
+  /* eslint-disable */
+  import DatePicker from 'vue-datepicker';
+
   export default {
     name: 'newQn',
     data() {
@@ -45,7 +51,48 @@
           status: 0,
           qns: [],
         },
+        // DatePicker options
+        date: {
+          time: '',
+        },
+        option: {
+          type: 'day',
+          week: ['一', '二', '三', '四', '五', '六', '日'],
+          month: ['一月', '二月', '三月', '四月', '五月', '六月', '七月', '八月', '九月', '十月',
+            '十一月', '十二月'
+          ],
+          format: 'YYYY-MM-DD',
+          placeholder: '请选择截止日期',
+          inputStyle: {
+            'display': 'inline-block',
+            'padding': '6px',
+            'line-height': '22px',
+            'font-size': '16px',
+            'border': '2px solid #ccc',
+            'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
+            'border-radius': '2px',
+            'color': '#5F5F5F',
+          },
+          color: {
+            header: '#3399ff',
+            headerText: '#fff',
+          },
+          buttons: {
+            ok: '确定',
+            cancel: '取消',
+          },
+          overlayOpacity: 0.5,
+          dismissible: true,
+        },
+        limit: [{
+            type: 'fromto',
+            from: '2017-01-01',
+            to: '',
+        }],
       };
+    },
+    components: {
+      'date-picker': DatePicker,
     },
     mounted() {
       if (this.$store.state.editing) {
@@ -119,6 +166,7 @@
         qn.options.push(`选项${qn.options.length + 1}`);
       },
       saveQns() {
+        this.aQns.deadline = this.date.time;
         this.$store.commit('saveQns', this.aQns);
       },
     },
@@ -178,6 +226,7 @@
       float: right;
       margin-right: 40px;
       >span {
+        display: block;
         margin: 0 10px;
         padding: 5px 15px;
         border: 1px solid #ccc;
