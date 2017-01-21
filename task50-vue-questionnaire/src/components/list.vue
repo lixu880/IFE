@@ -1,39 +1,56 @@
 <template>
-  <table v-if="qnss.length != 0">
-    <thead>
-      <tr>
-        <th class="title">标题</th>
-        <th class="time">截止日期</th>
-        <th class="status">状态</th>
-        <th class="handle">操作</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr v-for="qns in qnss">
-        <td>{{qns.title}}</td>
-        <td>{{qns.deadline}}</td>
-        <td :class="statusStyle(qns)">{{statusText(qns)}}</td>
-        <td class="handle-btns"><span v-if="qns.status == 0" @click="publish(qns)">发布问卷</span><span v-if="qns.status == 0" @click="editQns(qns)">编辑问卷</span><span
-            v-if="qns.status == 1" @click="fillQns(qns)">填写问卷</span><span v-if="qns.status != 0" @click="viewData(qns)">查看数据</span><span @click="delQns(qns)">删除问卷</span></td>
-      </tr>
-    </tbody>
-  </table>
+  <div>
+    <table v-if="qnss.length != 0">
+      <thead>
+        <tr>
+          <th class="title">标题</th>
+          <th class="time">截止日期</th>
+          <th class="status">状态</th>
+          <th class="handle">操作</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="qns in qnss">
+          <td>{{qns.title}}</td>
+          <td>{{qns.deadline}}</td>
+          <td :class="statusStyle(qns)">{{statusText(qns)}}</td>
+          <td class="handle-btns"><span v-if="qns.status == 0" @click="publish(qns)">发布问卷</span><span v-if="qns.status == 0" @click="editQns(qns)">编辑问卷</span><span
+              v-if="qns.status == 1" @click="fillQns(qns)">填写问卷</span><span v-if="qns.status != 0" @click="viewData(qns)">查看数据</span><span
+              @click="delQns(qns)">删除问卷</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <my-alert :alert-message="alertMessage" ref="myAlert">
+      <my-alert>
+  </div>
 </template>
 <script>
   export default {
     name: 'list',
-    // 如果没有数据跳空白页
-
+    data() {
+      return {
+        alertMessage: '',
+        tobeDel: null,
+      };
+    },
     computed: {
       qnss() {
         return this.$store.state.qnss;
       },
     },
+    // 如果没有数据跳空白页
     created() {
       if (this.qnss.length === 0) {
         this.$router.push('/');
       }
       this.$store.commit('deadLine');
+    },
+    mounted() {
+      this.$on('confirm', () => {
+        console.log('run');
+        this.$store.commit('delQns', this.tobeDel);
+        this.tobeDel = null;
+      });
     },
     methods: {
       statusText(qns) {
@@ -62,10 +79,21 @@
             return '';
         }
       },
-      delQns(qns) {
-        this.$store.commit('delQns', qns);
+      showAlert(qns) {
+        this.$refs.myAlert.$emit('showAlert', qns);
       },
+      // 删除alert
+      delQns(qns) {
+        this.tobeDel = qns;
+        this.alertMessage = '确认删除此问卷？';
+        this.showAlert();
+      },
+      // confirmDel(qns) {
+      //   this.$store.commit('delQns', qns);
+      // },
       publish(qns) {
+        this.alertMessage = '问卷发布成功';
+        this.showAlert();
         this.$store.commit('updateQns', qns);
       },
       editQns(qns) {
@@ -101,7 +129,6 @@
     border: 2px solid #42b983;
     // box-shadow: 0 5px 15px #999;
     border-radius: 5px;
-    position: relative;
     text-align: center;
     line-height: 1.5;
     th {

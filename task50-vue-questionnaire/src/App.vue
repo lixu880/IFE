@@ -109,8 +109,13 @@
     width: 100%;
     height: 100%;
     color: #000;
+    overflow: auto;
     position: relative;
     >header {
+      position: fixed;
+      z-index: 100;
+      left: 0;
+      top: 0;
       background: #42b983;
       width: 100%;
       height: 50px;

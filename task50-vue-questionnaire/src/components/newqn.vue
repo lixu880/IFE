@@ -32,8 +32,9 @@
         <span>截止日期：</span>
         <date-picker :date="date" :option="option" :limit="limit" v-model="aQns.deadline"></date-picker>
       </div>
-      <a class="btns" @click="saveQns" href="#/list"><span>保存问卷</span></a>
+      <a class="btns" @click="saveQns"><span>保存问卷</span></a>
     </footer>
+    <my-alert :alert-message="alertMessage" ref="myAlert"><my-alert>
   </div>
 </template>
 <script>
@@ -45,6 +46,7 @@
     data() {
       return {
         tag: false,
+        alertMessage: '',
         aQns: {
           title: '',
           deadline: '',
@@ -95,7 +97,7 @@
       'date-picker': DatePicker,
     },
     mounted() {
-      if (this.$store.state.editing) {
+      if (this.$store.state.editing != null) {
         this.aQns = this.$store.state.editing;
       }
     },
@@ -167,7 +169,25 @@
       },
       saveQns() {
         this.aQns.deadline = this.date.time;
+        // 显示弹窗 根据情况改变提示信息
+        this.$refs.myAlert.$emit('showAlert');
+        if (!this.aQns.title) {
+          this.alertMessage = '请输入问卷标题';
+          return;
+        }
+        if (!this.aQns.qns.length) {
+          this.alertMessage = '请添加问题';
+          return;
+        }
+        if (!this.aQns.deadline) {
+          this.alertMessage = '请选择截止日期';
+          return;
+        }
+        // 保存至store
         this.$store.commit('saveQns', this.aQns);
+        // 保存成功提示 稍等x秒跳列表页
+        this.alertMessage = '问卷保存成功';
+        setTimeout(() => {this.$router.push('/list');}, 1200);
       },
     },
   };
@@ -231,7 +251,9 @@
         padding: 5px 15px;
         border: 1px solid #ccc;
         border-radius: 5px;
-        box-shadow: 0 3px 6px #999;
+        box-shadow: 0 3px 6px #666;
+        cursor: pointer;
+        background: #fff;
         &:hover {
           color: #fff;
           background: #42B983;

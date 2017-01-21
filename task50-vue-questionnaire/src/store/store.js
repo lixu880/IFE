@@ -64,7 +64,10 @@ const store = new Vuex.Store({
       obj.editing = null;
     },
     delQns(state, payload) {
-      state.qnss.splice(state.qnss.indexOf(payload), 1);
+      const index = state.qnss.indexOf(payload);
+      if (index > -1) {
+        state.qnss.splice(index, 1);
+      }
     },
     updateQns(state, payload) {
       // status这个参数是必需的，不然改变数据不会引发view更新，及时这里没有用到

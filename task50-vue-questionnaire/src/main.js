@@ -12,8 +12,10 @@ import Newqn from './components/newqn';
 import List from './components/list';
 import Fillqn from './components/fillqn';
 import Viewdata from './components/viewdata';
+import Alert from './components/alert';
 
 Vue.use(VueRouter);
+Vue.component('my-alert', Alert);
 
 const router = new VueRouter({
   moder: 'history',
