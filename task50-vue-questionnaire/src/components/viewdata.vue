@@ -41,22 +41,22 @@
       valArr: [],
     };
 
-    // 求qn.value中的最大值
+    // 求被选的最大次数,并给出data数组
     let maxVal = 0;
-    qn.value.forEach((el) => {
-      if (el > maxVal) {
-        maxVal = el;
-      }
-    });
-    // 求每个选项选了多少次
-    qn.options.forEach((el, i) => {
+    for (let i = 0; i < qn.options.length; i += 1) {
       const val = qn.value.filter(ele => ele === i).length;
+      result.valArr.push(val);
+      if (val > maxVal) {
+        maxVal = val;
+      }
+    }
+    // 给出选项名和最大值数组
+    qn.options.forEach((el) => {
       const obj = {
         text: el,
         max: maxVal,
       };
       result.textArr.push(obj);
-      result.valArr.push(val);
     });
     return result;
   }

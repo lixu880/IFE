@@ -47,7 +47,6 @@
     },
     mounted() {
       this.$on('confirm', () => {
-        console.log('run');
         this.$store.commit('delQns', this.tobeDel);
         this.tobeDel = null;
       });
@@ -88,22 +87,23 @@
         this.alertMessage = '确认删除此问卷？';
         this.showAlert();
       },
-      // confirmDel(qns) {
-      //   this.$store.commit('delQns', qns);
-      // },
+      // 发布
       publish(qns) {
         this.alertMessage = '问卷发布成功';
         this.showAlert();
         this.$store.commit('updateQns', qns);
       },
+      // 编辑
       editQns(qns) {
         this.$store.commit('editQns', qns);
         this.$router.push('/newqn');
       },
+      // 填写
       fillQns(qns) {
         this.$store.commit('fillQns', qns);
         this.$router.push('/fillqn');
       },
+      // 查看数据
       viewData(qns) {
         this.$store.commit('viewData', qns);
         this.$router.push('/viewdata');
@@ -158,6 +158,7 @@
       }
       &.handle-btns {
         >span {
+          display: inline-block;
           margin: 0 10px;
           padding: 5px 10px;
           border: 1px solid rgba(0, 0, 0, .6);

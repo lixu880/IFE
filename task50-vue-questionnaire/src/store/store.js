@@ -58,7 +58,7 @@ const store = new Vuex.Store({
       const obj = state;
       // 判断如果是新建保存插入qnss末尾
       // 如果是编辑则只清楚editin的引用
-      if (!obj.editing) {
+      if (obj.editing == null) {
         obj.qnss.push(payload);
       }
       obj.editing = null;

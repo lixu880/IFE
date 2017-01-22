@@ -30,7 +30,7 @@
     <footer>
       <div class="deadline">
         <span>截止日期：</span>
-        <date-picker :date="date" :option="option" :limit="limit" v-model="aQns.deadline"></date-picker>
+        <date-picker :date="date" :option="option" :limit="limit"></date-picker>
       </div>
       <a class="btns" @click="saveQns"><span>保存问卷</span></a>
     </footer>
@@ -88,18 +88,10 @@
         },
         limit: [{
             type: 'fromto',
-            from: '2017-01-01',
+            from: Date(),
             to: '',
         }],
       };
-    },
-    components: {
-      'date-picker': DatePicker,
-    },
-    mounted() {
-      if (this.$store.state.editing != null) {
-        this.aQns = this.$store.state.editing;
-      }
     },
     methods: {
       // 限制单选最少两个选项，多选最少三个选项，因为多选用的雷达图
@@ -169,6 +161,7 @@
       },
       saveQns() {
         this.aQns.deadline = this.date.time;
+
         // 显示弹窗 根据情况改变提示信息
         this.$refs.myAlert.$emit('showAlert');
         if (!this.aQns.title) {
@@ -183,15 +176,31 @@
           this.alertMessage = '请选择截止日期';
           return;
         }
+        
         // 保存至store
         this.$store.commit('saveQns', this.aQns);
+
         // 保存成功提示 稍等x秒跳列表页
         this.alertMessage = '问卷保存成功';
-        setTimeout(() => {this.$router.push('/list');}, 1200);
+        setTimeout(() => {this.$router.push('/list')}, 1200);
       },
     },
+    components: {
+      'date-picker': DatePicker,
+    },
+    mounted() {
+      if (this.$store.state.editing != null) {
+        this.aQns = this.$store.state.editing;
+        this.date.time = this.aQns.deadline;
+      }
+    },
+    // router钩子 跳出编辑页使editing = null
+    // 这里有个bug，因为是v-model绑定数据，修改后不点保存点返回，修改也会生效
+    beforeRouteLeave(to, from, next) {
+      this.$store.state.editing = null;
+      next();
+    },
   };
-
 </script>
 <style lang="scss" scoped>
   .new-qn {
