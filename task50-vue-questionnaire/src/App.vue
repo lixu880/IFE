@@ -139,6 +139,7 @@
         h1 {
           font-size: 25px;
           display: inline;
+          vertical-align: sub;
         }
         h2 {
           font-size: 16px;
