@@ -70,6 +70,7 @@
             'padding': '6px',
             'line-height': '22px',
             'font-size': '16px',
+            'width': '150px',
             'border': '2px solid #ccc',
             'box-shadow': '0 1px 3px 0 rgba(0, 0, 0, 0.2)',
             'border-radius': '2px',

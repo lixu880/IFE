@@ -114,15 +114,27 @@
       .item {
         height: 25px;
         margin: 10px 0 10px 30px;
-        &:hover {
-          .icon-x:before {
-            content: "\e62a";
-            color: #f00;
-          }
-        }
+        padding: 0 10px;
         .type {
           width: 20px;
           height: 20px;
+        }
+        &:hover {
+          position: relative;
+          padding: 8px 10px 5px;
+          background: #eee;
+          border-radius: 5px;
+          box-shadow: 0px 1px 1px #000, inset 0px 4px 4px rgba(0, 0, 0, .3), inset 0px -4px 4px rgba(255, 255, 255, .5);
+          &:before {
+            content: '';
+            position: absolute;
+            top: 4px;
+            left: 4px;
+            width: calc(100% - 8px);
+            height: 12px;
+            background-image: -webkit-linear-gradient(top, rgba(255, 255, 255, 1) 0%, rgba(255, 255, 255, 0.2) 90%, rgba(255, 255, 255, 0) 90%);
+            border-radius: 10px;
+          }
         }
       }
       .qn-title {
