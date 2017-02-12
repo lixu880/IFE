@@ -5,7 +5,7 @@
     <div class="qnlist" v-for="(qn, index1) in fillQns.qns">
       <div><span>{{'Q' + (index1 + 1) + '：'}}</span><span class="qn-title">{{qn.question}}</span></div>
       <ul v-if="qn.type != 'textarea'">
-        <li class="item" v-for="(item, index2) in qn.options">
+        <li class="item" v-for="(item, index2) in qn.options" @click="clickInput($event)">
           <input class="type" type="radio" :name="'item' + index1" v-if="qn.type === 'radio'" :value="index2" :ref="'radio' + index1">
           <input class="type" type="checkbox" v-if="qn.type === 'checkbox'" :value="index2" :ref="'checkbox' + index1">
           <span class="options">{{qn.options[index2]}}</span>
@@ -20,11 +20,18 @@
     <footer>
       <a class="btns" @click="saveFill"><span>提交问卷</span></a>
     </footer>
+    <my-alert :alert-message="alertMessage" ref="myAlert">
+      <my-alert>
   </div>
 </template>
 <script>
   export default {
     name: 'fillqn',
+    data() {
+      return {
+        alertMessage: '',
+      };
+    },
     computed: {
       fillQns() {
         return this.$store.state.fillQns;
@@ -40,6 +47,14 @@
           const tRef = `text${i}`;
           const item = this.$refs[rRef] || this.$refs[cRef] || this.$refs[tRef];
           if (item.length && item.length > 1) {
+            // 如果有选择题未作答弹框提示 简答题就不强制了毕竟大家都这么懒
+            const empty = item.filter(el => el.checked).length;
+            if (empty === 0) {
+              this.alertMessage = '还有问题未作答';
+              this.$refs.myAlert.$emit('showAlert');
+              return;
+            }
+
             item.forEach((el, index) => {
               if (el.checked) {
                 qns[i].value.push(index);
@@ -55,6 +70,11 @@
         }
         this.$store.commit('saveFill');
         this.$router.push('/list');
+      },
+      clickInput(event) {
+        // event.target可能是li的子元素
+        const check = event.target.querySelector('.type') || event.target.parentNode.querySelector('.type');
+        check.checked = !check.checked;
       },
     },
   };
@@ -114,18 +134,17 @@
       .item {
         height: 25px;
         margin: 10px 0 10px 30px;
-        padding: 0 10px;
+        padding: 5px 10px;
         .type {
           width: 20px;
           height: 20px;
         }
         &:hover {
           position: relative;
-          padding: 8px 10px 5px;
           background: #eee;
           border-radius: 5px;
           box-shadow: 0px 1px 1px #000, inset 0px 4px 4px rgba(0, 0, 0, .3), inset 0px -4px 4px rgba(255, 255, 255, .5);
-          &:before {
+          &:after {
             content: '';
             position: absolute;
             top: 4px;

@@ -20,8 +20,7 @@
         </tr>
       </tbody>
     </table>
-    <my-alert :alert-message="alertMessage" ref="myAlert">
-      <my-alert>
+    <my-alert :alert-message="alertMessage" ref="myAlert"><my-alert>
   </div>
 </template>
 <script>
